@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@import "tailwindcss";
+
+:root {
+  --background: #0D0D0D;
+  --foreground: #E0E0E0;
+  
+  --astral-indigo: #2A2E6E;
+  --starlight-violet: #6C63FF;
+  --nebula-blue: #4DA8DA;
+  --cosmic-teal: #2EC4B6;
+  --solar-gold: #F2C94C;
+  --void-black: #0D0D0D;
+  --stellar-grey: #E0E0E0;
+  --orbit-silver: #BFC7D5;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  --color-astral-indigo: var(--astral-indigo);
+  --color-starlight-violet: var(--starlight-violet);
+  --color-nebula-blue: var(--nebula-blue);
+  --color-cosmic-teal: var(--cosmic-teal);
+  --color-solar-gold: var(--solar-gold);
+  --color-void-black: var(--void-black);
+  --color-stellar-grey: var(--stellar-grey);
+  --color-orbit-silver: var(--orbit-silver);
+
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-space-grotesk);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display), sans-serif;
+}
+
+.nebula-gradient {
+  background: radial-gradient(circle at 50% 50%, rgba(108, 99, 255, 0.1) 0%, rgba(13, 13, 13, 1) 100%);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+}
+
