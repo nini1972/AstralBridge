@@ -21,6 +21,21 @@ export const api = {
         return res.json();
     },
 
+    registerAgent: async (agent: Omit<AgentCard, "lastHeartbeat">): Promise<AgentCard> => {
+        const res = await fetch(`${API_BASE}/agents/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(agent),
+        });
+        if (!res.ok) throw new Error("Failed to register agent");
+        return res.json();
+    },
+
+    deleteAgent: async (name: string): Promise<void> => {
+        const res = await fetch(`${API_BASE}/agents/${name}`, { method: "DELETE" });
+        if (!res.ok) throw new Error("Failed to delete agent");
+    },
+
     sendHeartbeat: async (name: string, status: string): Promise<void> => {
         await fetch(`${API_BASE}/agents/${name}/heartbeat`, {
             method: "POST",
@@ -29,11 +44,11 @@ export const api = {
         });
     },
 
-    submitTask: async (capability: string, payload: any): Promise<RouterTask> => {
+    submitTask: async (capability: string, payload: any, targetAgent?: string): Promise<RouterTask> => {
         const res = await fetch(`${API_BASE}/a2a/task`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ capability, payload }),
+            body: JSON.stringify({ capability, payload, targetAgent }),
         });
         if (!res.ok) throw new Error("Failed to submit task");
         return res.json();
@@ -42,6 +57,12 @@ export const api = {
     getTaskStatus: async (taskId: string): Promise<RouterTask> => {
         const res = await fetch(`${API_BASE}/a2a/task/${taskId}`);
         if (!res.ok) throw new Error("Failed to fetch task status");
+        return res.json();
+    },
+
+    getTasks: async (): Promise<RouterTask[]> => {
+        const res = await fetch(`${API_BASE}/a2a/tasks`);
+        if (!res.ok) throw new Error("Failed to fetch tasks");
         return res.json();
     },
 };

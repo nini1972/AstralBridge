@@ -80,9 +80,9 @@ export default function DashboardPage() {
           </div>
           <h3 className="text-2xl font-display font-bold text-white">System Status: Optimal</h3>
           <p className="text-orbit-silver/60">All bridge nodes are synchronized and ready for interstellar communication.</p>
-          <button className="px-8 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-bold hover:bg-white/10 transition-all uppercase tracking-widest text-xs">
+          <Link href="/health" className="px-8 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-bold hover:bg-white/10 transition-all uppercase tracking-widest text-xs">
             View Node Logs
-          </button>
+          </Link>
         </div>
       </div>
     </div>

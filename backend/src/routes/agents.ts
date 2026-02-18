@@ -21,15 +21,6 @@ router.get('/', (req, res) => {
     res.json(Array.from(agents.values()));
 });
 
-// GET /agents/:name
-router.get('/:name', (req, res) => {
-    const agent = agents.get(req.params.name);
-    if (!agent) {
-        return res.status(404).json({ error: 'Agent not found' });
-    }
-    res.json(agent);
-});
-
 // GET /agents/search?capability=...
 router.get('/search', (req, res) => {
     const capability = req.query.capability as string;
@@ -40,6 +31,15 @@ router.get('/search', (req, res) => {
         a.capabilities.some(c => c.toLowerCase().includes(capability.toLowerCase()))
     );
     res.json(results);
+});
+
+// GET /agents/:name
+router.get('/:name', (req, res) => {
+    const agent = agents.get(req.params.name);
+    if (!agent) {
+        return res.status(404).json({ error: 'Agent not found' });
+    }
+    res.json(agent);
 });
 
 // POST /agents/:name/heartbeat
@@ -54,6 +54,15 @@ router.post('/:name/heartbeat', (req, res) => {
         agent.status = payload.status;
     }
     res.json({ status: 'updated', lastHeartbeat: agent.lastHeartbeat });
+});
+
+// DELETE /agents/:name
+router.delete('/:name', (req, res) => {
+    const existed = agents.delete(req.params.name);
+    if (!existed) {
+        return res.status(404).json({ error: 'Agent not found' });
+    }
+    res.json({ status: 'deleted', name: req.params.name });
 });
 
 export default router;
