@@ -1,4 +1,4 @@
-import { AgentCard, RouterTask } from "@shared/types";
+import { AgentCard, RouterTask, AgentLog, PipelineStep, PipelineRecord } from "@shared/types";
 
 const API_BASE = "http://localhost:3001";
 
@@ -63,6 +63,43 @@ export const api = {
     getTasks: async (): Promise<RouterTask[]> => {
         const res = await fetch(`${API_BASE}/a2a/tasks`);
         if (!res.ok) throw new Error("Failed to fetch tasks");
+        return res.json();
+    },
+
+    getAgentTasks: async (name: string): Promise<RouterTask[]> => {
+        const res = await fetch(`${API_BASE}/agents/${encodeURIComponent(name)}/tasks`);
+        if (!res.ok) throw new Error("Failed to fetch agent tasks");
+        return res.json();
+    },
+
+    getAgentLogs: async (name: string): Promise<AgentLog[]> => {
+        const res = await fetch(`${API_BASE}/agents/${encodeURIComponent(name)}/logs`);
+        if (!res.ok) throw new Error("Failed to fetch agent logs");
+        return res.json();
+    },
+
+    runPipeline: async (steps: PipelineStep[], input: any): Promise<PipelineRecord> => {
+        const res = await fetch(`${API_BASE}/a2a/pipeline`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ steps, input }),
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({ error: "Unknown error" }));
+            throw new Error(err.error || "Failed to start pipeline");
+        }
+        return res.json();
+    },
+
+    getPipeline: async (id: string): Promise<PipelineRecord> => {
+        const res = await fetch(`${API_BASE}/a2a/pipeline/${id}`);
+        if (!res.ok) throw new Error("Pipeline not found");
+        return res.json();
+    },
+
+    getPipelines: async (): Promise<PipelineRecord[]> => {
+        const res = await fetch(`${API_BASE}/a2a/pipelines`);
+        if (!res.ok) throw new Error("Failed to fetch pipelines");
         return res.json();
     },
 };

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { AgentCard as AgentType } from "@shared/types";
-import { Users, Code, Server, Clock, ChevronDown, ChevronUp, Trash2, AlertTriangle } from "lucide-react";
+import { Users, Code, Server, Clock, ChevronDown, ChevronUp, Trash2, AlertTriangle, ArrowUpRight } from "lucide-react";
 import StatusBadge from "./StatusBadge";
 import { api } from "@/lib/api";
 
@@ -40,7 +41,12 @@ export default function AgentCard({ agent, onDeleted }: AgentCardProps) {
                 <div className="p-3 bg-astral-indigo/40 rounded-2xl group-hover:bg-starlight-violet/20 transition-colors duration-500">
                     <Users className="w-6 h-6 text-starlight-violet" />
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap justify-end">
+                    {agent.version && (
+                        <span className="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-nebula-blue/10 text-nebula-blue border border-nebula-blue/20">
+                            v{agent.version}
+                        </span>
+                    )}
                     {simulated && (
                         <span className="flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest rounded-full border bg-solar-gold/10 text-solar-gold border-solar-gold/30">
                             <AlertTriangle className="w-2.5 h-2.5" />
@@ -53,9 +59,15 @@ export default function AgentCard({ agent, onDeleted }: AgentCardProps) {
 
             {/* Name & Description */}
             <div>
-                <h3 className="text-xl font-display font-bold text-white group-hover:text-starlight-violet transition-colors">
-                    {agent.name}
-                </h3>
+                <Link
+                    href={`/agents/${encodeURIComponent(agent.name)}`}
+                    className="group/link inline-flex items-center gap-1.5 hover:text-starlight-violet transition-colors"
+                >
+                    <h3 className="text-xl font-display font-bold text-white group-hover/link:text-starlight-violet transition-colors">
+                        {agent.name}
+                    </h3>
+                    <ArrowUpRight className="w-4 h-4 text-orbit-silver/0 group-hover/link:text-starlight-violet/60 transition-all" />
+                </Link>
                 <p className="text-sm text-orbit-silver/70 mt-1 line-clamp-2">
                     {agent.description || <span className="italic text-orbit-silver/40">No description</span>}
                 </p>
@@ -119,6 +131,28 @@ export default function AgentCard({ agent, onDeleted }: AgentCardProps) {
                             </p>
                         </div>
                     </div>
+                    {(agent.version || agent.build || agent.model) && (
+                        <div className="grid grid-cols-3 gap-3">
+                            {agent.version && (
+                                <div>
+                                    <p className="text-orbit-silver/40 uppercase tracking-widest text-[10px] mb-1">Version</p>
+                                    <p className="text-nebula-blue font-mono text-xs">v{agent.version}</p>
+                                </div>
+                            )}
+                            {agent.build && (
+                                <div>
+                                    <p className="text-orbit-silver/40 uppercase tracking-widest text-[10px] mb-1">Build</p>
+                                    <p className="text-orbit-silver/80 font-mono text-xs">{agent.build}</p>
+                                </div>
+                            )}
+                            {agent.model && (
+                                <div>
+                                    <p className="text-orbit-silver/40 uppercase tracking-widest text-[10px] mb-1">Model</p>
+                                    <p className="text-orbit-silver/80 text-xs">{agent.model}</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
                     {simulated && (
                         <p className="text-solar-gold/70 text-[10px] bg-solar-gold/5 border border-solar-gold/20 rounded-lg px-3 py-2">
                             ⚠ This is a simulated agent. Its endpoint does not resolve to a real server.

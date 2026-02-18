@@ -1,0 +1,9 @@
+
+The pipeline returned status: "running" with ID u4pw3j0 immediately ✅. Let me poll for the result and notify the user:
+
+The pipeline failed at step 2 (translate_text) with a 400 error. The issue is that detect_language returns a result object (e.g. { language: "en", confidence: "high" }), and when we pass it to translate_text, it's missing the text field. I need to fix the input chaining — when a step result doesn't contain a text field, we should preserve the original input's text and merge the result as additional context:
+
+6
+Fixing pipeline step chaining to preserve text field across steps
+
+

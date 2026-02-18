@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { api } from "@/lib/api";
 import { AgentCard } from "@shared/types";
-import { X, Plus, Loader2, CheckCircle } from "lucide-react";
+import { X, Plus, Loader2, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
 
 interface RegisterAgentModalProps {
     onClose: () => void;
@@ -22,7 +22,11 @@ export default function RegisterAgentModal({ onClose, onRegistered }: RegisterAg
         capabilities: "",
         framework: "",
         provider: "",
+        version: "",
+        build: "",
+        model: "",
     });
+    const [showAdvanced, setShowAdvanced] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
@@ -48,6 +52,9 @@ export default function RegisterAgentModal({ onClose, onRegistered }: RegisterAg
                 status: "active",
                 framework: form.framework.trim() || undefined,
                 provider: form.provider.trim() || undefined,
+                version: form.version.trim() || undefined,
+                build: form.build.trim() || undefined,
+                model: form.model.trim() || undefined,
             } as any);
             setSuccess(true);
             setTimeout(() => {
@@ -178,6 +185,48 @@ export default function RegisterAgentModal({ onClose, onRegistered }: RegisterAg
                                 />
                             </div>
                         </div>
+
+                        {/* Advanced toggle */}
+                        <button
+                            type="button"
+                            onClick={() => setShowAdvanced(v => !v)}
+                            className="flex items-center gap-2 text-xs text-orbit-silver/40 hover:text-orbit-silver/70 transition-colors"
+                        >
+                            {showAdvanced ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                            {showAdvanced ? "Hide" : "Show"} versioning fields
+                        </button>
+
+                        {showAdvanced && (
+                            <div className="grid grid-cols-3 gap-4 p-4 bg-white/3 rounded-xl border border-white/8">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] text-orbit-silver/50 uppercase tracking-widest font-bold">Version</label>
+                                    <input
+                                        className={FIELD_CLASSES}
+                                        placeholder="1.0.0"
+                                        value={form.version}
+                                        onChange={set("version")}
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] text-orbit-silver/50 uppercase tracking-widest font-bold">Build</label>
+                                    <input
+                                        className={FIELD_CLASSES}
+                                        placeholder="abc123"
+                                        value={form.build}
+                                        onChange={set("build")}
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] text-orbit-silver/50 uppercase tracking-widest font-bold">Model</label>
+                                    <input
+                                        className={FIELD_CLASSES}
+                                        placeholder="gpt-4o"
+                                        value={form.model}
+                                        onChange={set("model")}
+                                    />
+                                </div>
+                            </div>
+                        )}
 
                         {error && (
                             <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">

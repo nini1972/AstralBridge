@@ -1,4 +1,6 @@
-import { AgentCard, RouterTask } from '../../shared/types';
+import { AgentCard, RouterTask, AgentLog, PipelineRecord } from '../../shared/types';
 
-export const agents: Map<string, AgentCard> = new Map();
-export const tasks: Map<string, RouterTask> = new Map();
+export const agents = new Map<string, AgentCard>();
+export const tasks = new Map<string, RouterTask>();
+export const logs = new Map<string, AgentLog[]>();
+export const pipelines = new Map<string, PipelineRecord>();
