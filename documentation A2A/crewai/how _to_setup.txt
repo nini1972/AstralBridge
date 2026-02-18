@@ -1,0 +1,52 @@
+1. Install the A2A dependency:
+uv add 'crewai[a2a]'
+2. Expose agents as A2A servers (for your register):
+from crewai import Agent
+from crewai.a2a import A2AServerConfig
+
+agent = Agent(
+    role="Data Analyst",
+    goal="Analyze datasets and provide insights",
+    backstory="Expert data scientist with statistical analysis skills",
+    llm="gpt-4o",
+    a2a=A2AServerConfig(url="https://your-server.com")
+)
+This auto-generates an agent card at /.well-known/agent-card.json — which is exactly what an A2A register platform would discover.
+
+3. Create client agents that connect to registered agents:
+from crewai.a2a import A2AClientConfig
+
+coordinator = Agent(
+    role="Research Coordinator",
+    goal="Coordinate research tasks efficiently",
+    backstory="Expert at delegating to specialized agents",
+    llm="gpt-4o",
+    a2a=A2AClientConfig(
+        endpoint="https://example.com/.well-known/agent-card.json",
+        timeout=120,
+        max_turns=10
+    )
+)
+4. Agents can be both client AND server:
+from crewai.a2a import A2AClientConfig, A2AServerConfig
+
+agent = Agent(
+    role="Research Coordinator",
+    goal="Coordinate research and serve analysis requests",
+    backstory="Expert at delegation and analysis",
+    llm="gpt-4o",
+    a2a=[
+        A2AClientConfig(endpoint="https://specialist.example.com/.well-known/agent-card.json"),
+        A2AServerConfig(url="https://your-server.com")
+    ]
+)
+The A2AServerConfig supports customizing skills, capabilities, security schemes, versioning, and more — all useful for a registry platform.
+
+A2A Agent Delegation docs
+Crafting Effective Agents
+Build Your First Crew
+
+
+
+
+

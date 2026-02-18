@@ -4,17 +4,37 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Users, Zap, HeartPulse, GitBranch, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-const navItems = [
-    { name: 'Dashboard', href: '/', icon: Home },
-    { name: 'Agents', href: '/agents', icon: Users },
-    { name: 'Capabilities', href: '/capabilities', icon: Zap },
-    { name: 'Health', href: '/health', icon: HeartPulse },
-    { name: 'Task Flows', href: '/task-flows', icon: GitBranch },
-];
+import { useEffect, useState } from 'react';
+import { api } from '@/lib/api';
 
 export default function Sidebar() {
     const pathname = usePathname();
+    const [agentCount, setAgentCount] = useState<number | null>(null);
+    const [taskCount, setTaskCount] = useState<number | null>(null);
+
+    useEffect(() => {
+        const refresh = async () => {
+            try {
+                const [agents, tasks] = await Promise.all([
+                    api.getAgents(),
+                    api.getTasks().catch(() => []),
+                ]);
+                setAgentCount(agents.length);
+                setTaskCount(tasks.length);
+            } catch { /* silently ignore */ }
+        };
+        refresh();
+        const id = setInterval(refresh, 10_000);
+        return () => clearInterval(id);
+    }, []);
+
+    const navItems = [
+        { name: 'Dashboard', href: '/', icon: Home, badge: null },
+        { name: 'Agents', href: '/agents', icon: Users, badge: agentCount },
+        { name: 'Capabilities', href: '/capabilities', icon: Zap, badge: null },
+        { name: 'Health', href: '/health', icon: HeartPulse, badge: null },
+        { name: 'Task Flows', href: '/task-flows', icon: GitBranch, badge: taskCount },
+    ];
 
     return (
         <aside className="w-64 glass-card m-4 border-r border-white/10 hidden md:flex flex-col">
@@ -42,10 +62,20 @@ export default function Sidebar() {
                             )}
                         >
                             <item.icon className={cn(
-                                "w-5 h-5 transition-transform duration-300",
+                                "w-5 h-5 transition-transform duration-300 shrink-0",
                                 isActive ? "scale-110" : "group-hover:scale-110"
                             )} />
-                            <span className="font-medium">{item.name}</span>
+                            <span className="font-medium flex-1">{item.name}</span>
+                            {item.badge !== null && item.badge !== undefined && (
+                                <span className={cn(
+                                    "text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center leading-none",
+                                    isActive
+                                        ? "bg-starlight-violet/30 text-starlight-violet"
+                                        : "bg-white/10 text-orbit-silver/60"
+                                )}>
+                                    {item.badge}
+                                </span>
+                            )}
                         </Link>
                     );
                 })}

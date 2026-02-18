@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { agents } from '../store';
 import { AgentCard, HeartbeatPayload } from '../../../shared/types';
+import { saveAgents } from '../persistence';
 
 const router = Router();
 
@@ -13,6 +14,7 @@ router.post('/register', (req, res) => {
     agent.lastHeartbeat = Date.now();
     agent.status = agent.status || 'active';
     agents.set(agent.name, agent);
+    saveAgents();
     res.status(201).json(agent);
 });
 
@@ -53,6 +55,7 @@ router.post('/:name/heartbeat', (req, res) => {
     if (payload.status) {
         agent.status = payload.status;
     }
+    saveAgents();
     res.json({ status: 'updated', lastHeartbeat: agent.lastHeartbeat });
 });
 
@@ -62,6 +65,7 @@ router.delete('/:name', (req, res) => {
     if (!existed) {
         return res.status(404).json({ error: 'Agent not found' });
     }
+    saveAgents();
     res.json({ status: 'deleted', name: req.params.name });
 });
 
