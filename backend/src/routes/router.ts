@@ -23,7 +23,7 @@ router.post('/task', (req, res) => {
 
     const availableAgents = Array.from(agents.values()).filter(a =>
         a.status === 'active' &&
-        a.capabilities.includes(capability) &&
+        (a.capabilities.includes(capability) || a.skills?.some(s => s.id === capability)) &&
         !isSimulated(a.endpoint)
     );
 
@@ -134,7 +134,7 @@ router.post('/pipeline', (req, res) => {
 
             // Find agent for this step
             const agent = Array.from(agents.values()).find(
-                a => a.status === 'active' && a.capabilities.includes(step.capability) && !isSimulated(a.endpoint)
+                a => a.status === 'active' && (a.capabilities.includes(step.capability) || a.skills?.some(s => s.id === step.capability)) && !isSimulated(a.endpoint)
             );
 
             if (!agent) {
@@ -183,10 +183,12 @@ router.post('/pipeline', (req, res) => {
                     { pipelineId: pipeline.id, result: stepResult.result }
                 );
 
-                // Pass this step's result as next step's input
-                currentInput = typeof response.data.result === 'object' && response.data.result !== null
-                    ? response.data.result
-                    : { text: String(response.data.result), ...currentInput };
+                // Pass this step's result as next step's input (merge to preserve fields like 'text')
+                if (typeof response.data.result === 'object' && response.data.result !== null) {
+                    currentInput = { ...currentInput, ...response.data.result };
+                } else {
+                    currentInput = { ...currentInput, text: String(response.data.result) };
+                }
 
             } catch (err: any) {
                 const stepResult: PipelineStepResult = {

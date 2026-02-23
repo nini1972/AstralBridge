@@ -4,7 +4,9 @@ import dotenv from 'dotenv';
 import agentRoutes from './routes/agents';
 import routerRoutes from './routes/router';
 import { loadMockData } from './mockData';
-import { loadAgents } from './persistence';
+import { loadAgents, saveAgents } from './persistence';
+import { agents } from './store';
+import { appendLog } from './logStore';
 
 dotenv.config();
 
@@ -23,6 +25,34 @@ app.use('/a2a', routerRoutes);
 app.get('/health', (req, res) => {
     res.json({ status: 'ok', timestamp: Date.now() });
 });
+
+// ─── Health Monitor ──────────────────────────────────────────────────────────
+
+const STALE_THRESHOLD_MS = 60000; // 1 minute
+const MONITOR_INTERVAL_MS = 30000; // 30 seconds
+
+setInterval(() => {
+    const now = Date.now();
+    let changed = false;
+
+    for (const agent of agents.values()) {
+        // Only monitor "real" agents (not simulated) that are currently active
+        const isSimulated = agent.endpoint.includes('.local') || agent.endpoint.includes('example.com');
+
+        if (!isSimulated && agent.status === 'active' && (now - agent.lastHeartbeat) > STALE_THRESHOLD_MS) {
+            console.log(`[health] Marking agent "${agent.name}" as inactive (stale heartbeat)`);
+            agent.status = 'inactive';
+            appendLog(agent.name, 'heartbeat', `Agent "${agent.name}" marked as inactive due to stale heartbeat`);
+            changed = true;
+        }
+    }
+
+    if (changed) {
+        saveAgents();
+    }
+}, MONITOR_INTERVAL_MS);
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 app.listen(PORT, () => {
     console.log(`AstralBridge Backend running on port ${PORT}`);

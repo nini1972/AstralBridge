@@ -102,4 +102,16 @@ export const api = {
         if (!res.ok) throw new Error("Failed to fetch pipelines");
         return res.json();
     },
+    discoverAgent: async (url: string): Promise<AgentCard> => {
+        const res = await fetch(`${API_BASE}/agents/discovery`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url }),
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({ error: "Discovery failed" }));
+            throw new Error(err.error || "Discovery failed");
+        }
+        return res.json();
+    },
 };

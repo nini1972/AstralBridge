@@ -1,8 +1,18 @@
+export interface AgentSkill {
+    id: string;
+    name: string;
+    description: string;
+    inputModes: string[]; // e.g. ["text"]
+    outputModes: string[]; // e.g. ["text"]
+    parameters?: Record<string, any>; // JSON Schema for params
+}
+
 export interface AgentCard {
     name: string;
     role: string;
     description: string;
-    capabilities: string[];
+    capabilities: string[]; // Backward compatibility / simple search
+    skills?: AgentSkill[];   // Structured skills
     endpoint: string;
     status: 'active' | 'inactive' | 'busy';
     lastHeartbeat: number;
@@ -42,6 +52,7 @@ export type AgentLogType =
     | 'register'
     | 'heartbeat'
     | 'delete'
+    | 'discovery'
     | 'task_request'
     | 'task_response'
     | 'task_error';

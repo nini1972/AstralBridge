@@ -12,16 +12,52 @@ const BRIDGE_URL = 'http://localhost:3001';
 app.use(cors());
 app.use(express.json());
 
-const agentCard = {
+const agentCard: any = {
     name: 'TranslatorAgent',
     role: 'Language Translator',
     description: 'Translates text between languages and detects the language of a given text.',
     capabilities: ['translate_text', 'detect_language'],
+    skills: [
+        {
+            id: 'translate_text',
+            name: 'Translate Text',
+            description: 'Translates a string from one language to another.',
+            inputModes: ['text'],
+            outputModes: ['text'],
+            parameters: {
+                type: 'object',
+                properties: {
+                    text: { type: 'string' },
+                    targetLang: { type: 'string', enum: ['fr', 'es', 'de', 'nl'] }
+                },
+                required: ['text', 'targetLang']
+            }
+        },
+        {
+            id: 'detect_language',
+            name: 'Detect Language',
+            description: 'Identifies the language of a given text.',
+            inputModes: ['text'],
+            outputModes: ['text'],
+            parameters: {
+                type: 'object',
+                properties: {
+                    text: { type: 'string' }
+                },
+                required: ['text']
+            }
+        }
+    ],
     endpoint: `http://localhost:${PORT}/a2a`,
     status: 'active',
     framework: 'Express',
     provider: 'Local',
 };
+
+// ─── A2A Discovery ────────────────────────────────────────────────────────────
+app.get('/.well-known/agent-card.json', (req, res) => {
+    res.json(agentCard);
+});
 
 // ─── Translation dictionary ───────────────────────────────────────────────────
 // Structure: phrase (lowercase) → { fr, es, de, nl }
@@ -132,9 +168,11 @@ app.post('/a2a/task', (req: any, res: any) => {
     let result: any;
 
     if (capability === 'translate_text') {
-        const { text, targetLanguage } = payload;
-        if (!text || !targetLanguage) {
-            return res.status(400).json({ error: 'translate_text requires { text, targetLanguage }' });
+        const targetLanguage = payload.targetLanguage || payload.targetlanguage || payload.targetLang || 'en';
+        const { text } = payload;
+
+        if (!text) {
+            return res.status(400).json({ error: 'translate_text requires { text }' });
         }
         const translation = translateText(text, targetLanguage);
         const detected = detectLanguage(text);

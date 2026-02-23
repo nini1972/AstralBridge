@@ -12,16 +12,37 @@ const BRIDGE_URL = 'http://localhost:3001';
 app.use(cors());
 app.use(express.json());
 
-const agentCard = {
+const agentCard: any = {
     name: 'SentimentAgent',
     role: 'Sentiment Analyst',
     description: 'Analyzes the emotional tone of text.',
     capabilities: ['analyze_sentiment'],
+    skills: [
+        {
+            id: 'analyze_sentiment',
+            name: 'Analyze Sentiment',
+            description: 'Identifies if the emotional tone of text is positive, negative, or neutral.',
+            inputModes: ['text'],
+            outputModes: ['text'],
+            parameters: {
+                type: 'object',
+                properties: {
+                    text: { type: 'string' }
+                },
+                required: ['text']
+            }
+        }
+    ],
     endpoint: `http://localhost:${PORT}/a2a`,
     status: 'active',
     framework: 'Express',
     provider: 'Local',
 };
+
+// ─── A2A Discovery ────────────────────────────────────────────────────────────
+app.get('/.well-known/agent-card.json', (req, res) => {
+    res.json(agentCard);
+});
 
 const tasks = new Map();
 

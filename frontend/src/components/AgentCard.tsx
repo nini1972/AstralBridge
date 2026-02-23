@@ -109,16 +109,37 @@ export default function AgentCard({ agent, onDeleted }: AgentCardProps) {
                         <p className="text-orbit-silver/40 uppercase tracking-widest text-[10px] mb-1">Endpoint</p>
                         <p className="text-orbit-silver/80 font-mono break-all">{agent.endpoint}</p>
                     </div>
-                    <div>
-                        <p className="text-orbit-silver/40 uppercase tracking-widest text-[10px] mb-1">All Capabilities</p>
-                        <div className="flex flex-wrap gap-1.5">
-                            {agent.capabilities.map((cap) => (
-                                <span key={cap} className="px-2 py-0.5 bg-starlight-violet/10 border border-starlight-violet/20 rounded text-[10px] text-starlight-violet/90">
-                                    {cap}
-                                </span>
-                            ))}
+                    {agent.skills && agent.skills.length > 0 ? (
+                        <div>
+                            <p className="text-orbit-silver/40 uppercase tracking-widest text-[10px] mb-2">A2A Skills</p>
+                            <div className="space-y-2">
+                                {agent.skills.map((skill) => (
+                                    <div key={skill.id} className="p-2 bg-white/5 border border-white/10 rounded-lg">
+                                        <div className="flex items-center justify-between mb-1">
+                                            <span className="font-bold text-starlight-violet text-[11px]">{skill.name}</span>
+                                            <div className="flex gap-1">
+                                                {skill.inputModes.map(m => (
+                                                    <span key={m} className="px-1.5 py-0.5 bg-nebula-blue/10 text-nebula-blue border border-nebula-blue/20 rounded text-[8px] uppercase">{m} in</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <p className="text-[10px] text-orbit-silver/60 leading-tight">{skill.description}</p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div>
+                            <p className="text-orbit-silver/40 uppercase tracking-widest text-[10px] mb-1">All Capabilities (Legacy)</p>
+                            <div className="flex flex-wrap gap-1.5">
+                                {agent.capabilities.map((cap) => (
+                                    <span key={cap} className="px-2 py-0.5 bg-starlight-violet/10 border border-starlight-violet/20 rounded text-[10px] text-starlight-violet/90">
+                                        {cap}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                     <div className="grid grid-cols-2 gap-3">
                         <div>
                             <p className="text-orbit-silver/40 uppercase tracking-widest text-[10px] mb-1">Role</p>
