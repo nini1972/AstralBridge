@@ -3,6 +3,8 @@ import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 
+import NebulaBackground from "@/components/NebulaBackground";
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -26,9 +28,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${inter.variable} ${spaceGrotesk.variable} antialiased nebula-gradient min-h-screen`}
+        className={`${inter.variable} ${spaceGrotesk.variable} antialiased min-h-screen bg-void-black text-foreground`}
       >
-        <div className="flex min-h-screen">
+        <NebulaBackground />
+        <div className="flex min-h-screen relative z-10">
           <Sidebar />
           {/* Main Content Area */}
           <main className="flex-1 overflow-y-auto h-screen">

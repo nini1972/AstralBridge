@@ -1,9 +1,189 @@
+Now that discovery is in place, you can build:
 
-The pipeline returned status: "running" with ID u4pw3j0 immediately ✅. Let me poll for the result and notify the user:
+Capability Graph → agents appear automatically
 
-The pipeline failed at step 2 (translate_text) with a 400 error. The issue is that detect_language returns a result object (e.g. { language: "en", confidence: "high" }), and when we pass it to translate_text, it's missing the text field. I need to fix the input chaining — when a step result doesn't contain a text field, we should preserve the original input's text and merge the result as additional context:
+Skill Filtering → based on imported metadata
 
-6
-Fixing pipeline step chaining to preserve text field across steps
+Fleet Test Bench → run diagnostics on discovered agents
 
+Auto‑pipeline suggestions → based on capabilities
 
+Federation → connect AstralBridge instances together
+
+You’re no longer building a dashboard.
+You’re building a networked intelligence platform
+
+Technical structure that keeps it smooth
+To make it performant and fluid:
+
+Canvas for rendering stars and motion
+
+SVG for edges and labels
+
+D3 force simulation for layout
+
+React state for interactions
+
+WebSocket or polling for live updates
+
+A2A agent-card.json as the metadata source
+
+This hybrid approach gives you both speed and clarity.
+
+Canvas/WebGL for the particle field and glowing nodes
+
+SVG for edges, labels, and interaction zones
+
+D3 force simulation for layout
+
+React for UI state and interactions
+
+This gives you smooth animation, crisp edges, and a responsive interface.
+
+🧩 Technical approach for blended waves
+To achieve this effect:
+
+Use additive blending in WebGL so overlapping waves intensify rather than overwrite each other.
+
+Use shared vector fields so waves naturally align and curve together.
+
+Use smooth noise fields to give the motion organic flow.
+
+Use color interpolation so multiple pipelines create a unified spectrum.
+
+Use particle advection so dust fields respond to the combined energy.
+
+This creates a single, flowing pattern that feels alive and intelligent.
+
+🧩 Technical approach for smooth gradients
+To achieve this effect cleanly:
+
+Use additive blending so colors intensify naturally.
+
+Use perlin/simplex noise fields to guide wave curvature.
+
+Use GPU‑accelerated shaders for gradient transitions.
+
+Use color interpolation curves (e.g., LAB or HCL) for natural blending.
+
+This ensures the gradients feel organic, not artificial.
+
+Technical structure for a living nebula
+To keep the motion smooth and subtle:
+
+Use multiple gradient layers with different drift speeds.
+
+Use noise-based distortion to create organic shapes.
+
+Use GPU shaders for smooth transitions and color blending.
+
+Use low-opacity particle fields that respond to the gradient.
+
+Keep the motion slow enough to feel natural, but not static.
+
+This creates a background that feels like a cosmic ocean.
+
+Technical structure for bright‑star rendering
+To achieve this effect cleanly:
+
+Use additive blending for the halo so brightness stacks naturally.
+
+Render the core as a high‑intensity point with a soft falloff.
+
+Use Gaussian blur or bloom shaders for the glow.
+
+Add a subtle chromatic fringe to mimic real star diffraction.
+
+Keep the halo responsive to heartbeat and activity signals.
+
+This creates a crisp, luminous star that feels alive without overwhelming the scene.
+
+Technical structure for expressive glyphs
+To keep them crisp and luminous:
+
+Render glyphs as vector shapes (SVG or shader‑based).
+
+Apply additive blending for glow.
+
+Use GPU shaders for color transitions.
+
+Keep orbit paths smooth and noise‑driven.
+
+Tie animation parameters to real agent activity.
+
+This ensures the glyphs feel integrated into the cosmic environment.
+
+Technical structure for organic glyphs
+To keep them fluid and luminous:
+
+Render glyphs as vector paths with dynamic control points.
+
+Use noise‑driven deformation to create organic motion.
+
+Apply additive blending for glow and color transitions.
+
+Tie animation parameters to real skill activity.
+
+Keep orbiting smooth but slightly irregular for naturalism.
+
+This creates glyphs that feel grown, not engineered.
+
+Technical structure for mutual influence
+To make this work smoothly:
+
+Use a shared vector field that all glyphs sample from.
+
+Let glyphs modify the field slightly when active.
+
+Use noise‑driven deformation for organic motion.
+
+Apply spring-like forces between glyphs for subtle attraction/repulsion.
+
+Tie influence strength to skill activity and pipeline flow.
+
+This creates a system where motion is emergent, not scripted.
+
+Technical structure for flexible filaments
+To achieve this effect:
+
+Use Bezier or Catmull‑Rom curves instead of straight lines.
+
+Apply noise‑driven displacement for gentle sway.
+
+Use additive blending for glow and wave pulses.
+
+Tie curvature to node motion and shared vector fields.
+
+Use GPU shaders for smooth gradient transitions along the filament.
+
+This keeps the motion fluid and performant.
+
+Technical structure for gravitational navigation
+To achieve this effect:
+
+Use inertial interpolation for camera movement.
+
+Apply ease‑in curves for acceleration toward the target.
+
+Add parallax layers for depth.
+
+Tie subtle distortions to the shared vector field so the environment reacts.
+
+Let the agent’s halo scale and brighten dynamically as the camera approaches.
+
+This keeps the motion smooth, immersive, and integrated with the rest of the cosmic field.
+
+🧩 Technical and visual structure
+To support this intimate-but-open composition:
+
+The camera stops at a soft orbital radius, not at the star’s surface.
+
+The star’s halo uses bloom and additive glow to fill the center with warmth.
+
+Glyphs maintain stable but organic orbits, never colliding or overwhelming the frame.
+
+Parallax layers of the nebula remain visible, giving depth behind the star.
+
+Filaments sway gently, framing the star without dominating the view.
+
+This creates a layered, cinematic composition that feels alive from every angle.

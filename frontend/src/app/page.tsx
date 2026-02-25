@@ -2,9 +2,10 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { api } from "@/lib/api";
-import { AgentCard, RouterTask } from "@shared/types";
+import { AgentCard, RouterTask, PipelineRecord } from "@shared/types";
 import { Users, Zap, HeartPulse, GitBranch, ArrowRight, Activity, Clock, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
+import CosmicGraph from "@/components/CosmicGraph";
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 const isSimulated = (a: AgentCard) =>
@@ -33,16 +34,19 @@ const StatusIcon = ({ status }: { status: string }) => {
 export default function DashboardPage() {
   const [agents, setAgents] = useState<AgentCard[]>([]);
   const [tasks, setTasks] = useState<RouterTask[]>([]);
+  const [pipelines, setPipelines] = useState<PipelineRecord[]>([]);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
   const refresh = useCallback(async () => {
     try {
-      const [agentData, taskData] = await Promise.all([
+      const [agentData, taskData, pipelineData] = await Promise.all([
         api.getAgents(),
         api.getTasks().catch(() => [] as RouterTask[]),
+        api.getPipelines().catch(() => [] as PipelineRecord[]),
       ]);
       setAgents(agentData);
       setTasks(taskData);
+      setPipelines(pipelineData.filter(p => p.status === 'running'));
       setLastRefresh(new Date());
     } catch (e) {
       console.error(e);
@@ -63,7 +67,6 @@ export default function DashboardPage() {
   const activeTasks = tasks.filter(t => t.status !== "completed" && t.status !== "failed").length;
   const recentTasks = [...tasks].reverse().slice(0, 5);
 
-  // capability → how many agents support it
   const capCounts = uniqueCaps.map(cap => ({
     cap,
     count: agents.filter(a => a.capabilities.includes(cap)).length,
@@ -127,6 +130,12 @@ export default function DashboardPage() {
           <span>Live · refreshed {timeAgo(lastRefresh.getTime())}</span>
         </div>
       </div>
+
+      {/* ── Cosmic Visualization ── */}
+      <section className="relative group">
+        <div className="absolute -inset-1 bg-gradient-to-r from-starlight-violet/20 to-nebula-blue/20 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
+        <CosmicGraph agents={agents} activePipelines={pipelines} />
+      </section>
 
       {/* ── Stat Cards ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
