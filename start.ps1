@@ -31,8 +31,14 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$root\agents\
 
 Start-Sleep -Seconds 3
 
+# MathAgent
+Write-Host "  [5/6] MathAgent       (port 4004)" -ForegroundColor Yellow
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd 'C:\Users\ninic\univers-knowledge\math_service'; ..\..\.venv\Scripts\python -m uvicorn app:app --port 4004" -WindowStyle Normal
+
+Start-Sleep -Seconds 3
+
 # Frontend (last — agents need time to register first)
-Write-Host "  [5/5] Frontend        (port 3000)" -ForegroundColor Yellow
+Write-Host "  [6/6] Frontend        (port 3000)" -ForegroundColor Yellow
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$root\frontend'; npm run dev" -WindowStyle Normal
 
 Write-Host ""
@@ -45,4 +51,5 @@ Write-Host "    Frontend:        http://localhost:3000"
 Write-Host "    Backend API:     http://localhost:3001"
 Write-Host "    SummarizerAgent: http://localhost:4001"
 Write-Host "    SentimentAgent:  http://localhost:4002"
+Write-Host "    MathAgent:       http://localhost:4004"
 Write-Host ""

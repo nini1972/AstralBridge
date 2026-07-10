@@ -39,4 +39,21 @@ export const loadMockData = () => {
     ];
 
     mockAgents.forEach(agent => agents.set(agent.name, agent));
+
+    const mathAgentUrl = process.env.MATH_AGENT_URL;
+    if (mathAgentUrl) {
+        const mathAgent: AgentCard = {
+            name: 'MathAgent',
+            role: 'Mathematical Proof Expert',
+            description: 'Solves, verifies, and documents complex mathematical proofs and derivations using python/sympy code.',
+            capabilities: ['verify_derivation'],
+            endpoint: mathAgentUrl,
+            status: 'active',
+            lastHeartbeat: Date.now(),
+            framework: 'FastAPI + CrewAI',
+            provider: 'Local',
+        };
+        agents.set(mathAgent.name, mathAgent);
+        console.log(`[bootstrap] Pre-registered MathAgent at ${mathAgentUrl}`);
+    }
 };
