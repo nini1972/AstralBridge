@@ -31,8 +31,8 @@ export default function HealthPage() {
     useEffect(() => {
         const check = async () => {
             try {
-                const res = await fetch("http://localhost:3001/health");
-                const ok = res.ok;
+                const data = await api.getHealth();
+                const ok = data.status === "ok";
                 setBackendOk(ok);
                 if (ok) addEvent("Backend health check passed", "ok");
             } catch {

@@ -9,6 +9,12 @@ export const api = {
         return res.json();
     },
 
+    getHealth: async (): Promise<{ status: string; timestamp: number }> => {
+        const res = await fetch(`${API_BASE}/health`);
+        if (!res.ok) throw new Error("Failed to fetch health");
+        return res.json();
+    },
+
     getAgent: async (name: string): Promise<AgentCard> => {
         const res = await fetch(`${API_BASE}/agents/${name}`);
         if (!res.ok) throw new Error("Failed to fetch agent");

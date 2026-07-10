@@ -36,10 +36,11 @@ setInterval(() => {
     let changed = false;
 
     for (const agent of agents.values()) {
-        // Only monitor "real" agents (not simulated) that are currently active
+        // Only monitor "real" agents (not simulated or cloud run serverless) that are currently active
         const isSimulated = agent.endpoint.includes('.local') || agent.endpoint.includes('example.com');
+        const isServerless = agent.endpoint.includes('.run.app') || agent.endpoint.includes('a.run.app');
 
-        if (!isSimulated && agent.status === 'active' && (now - agent.lastHeartbeat) > STALE_THRESHOLD_MS) {
+        if (!isSimulated && !isServerless && agent.status === 'active' && (now - agent.lastHeartbeat) > STALE_THRESHOLD_MS) {
             console.log(`[health] Marking agent "${agent.name}" as inactive (stale heartbeat)`);
             agent.status = 'inactive';
             appendLog(agent.name, 'heartbeat', `Agent "${agent.name}" marked as inactive due to stale heartbeat`);
