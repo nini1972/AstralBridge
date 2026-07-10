@@ -1,6 +1,6 @@
 import { AgentCard, RouterTask, AgentLog, PipelineStep, PipelineRecord } from "@shared/types";
 
-const API_BASE = "http://localhost:3001";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 export const api = {
     getAgents: async (): Promise<AgentCard[]> => {
